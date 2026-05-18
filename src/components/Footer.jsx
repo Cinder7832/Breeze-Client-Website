@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Wind, Github, Twitter, Discord, Heart } from 'lucide-react';
+import { Wind, Github, Twitter, MessageCircle, Heart } from 'lucide-react';
 
 const footerLinks = {
   product: [
@@ -22,7 +22,7 @@ const footerLinks = {
   social: [
     { name: 'GitHub', icon: Github, href: '#' },
     { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'Discord', icon: Discord, href: '#' },
+    { name: 'Discord', icon: MessageCircle, href: '#' },
   ],
 };
 
