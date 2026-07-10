@@ -106,7 +106,9 @@ button {
     0 18px 70px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
+  opacity: 0;
   transform: translateX(-50%);
+  animation: header-load-in 720ms 120ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .brand,
@@ -180,7 +182,10 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  opacity: 0;
   text-align: center;
+  transform: translateY(1.25rem);
+  animation: hero-load-in 820ms 220ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .hero-logo-button,
@@ -419,6 +424,35 @@ button {
     transform 180ms ease,
     box-shadow 180ms ease,
     border-color 180ms ease;
+}
+
+.download-button-icon,
+.download-button-text {
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    width 220ms ease,
+    margin 220ms ease;
+}
+
+.download-button-icon {
+  width: 1.25rem;
+  flex: 0 0 auto;
+}
+
+.download-button-complete {
+  gap: 0;
+}
+
+.download-button-complete .download-button-icon {
+  width: 0;
+  margin-right: -0.05rem;
+  opacity: 0;
+  transform: translateY(0.2rem) scale(0.82);
+}
+
+.download-button-complete .download-button-text {
+  transform: translateY(-0.02rem);
 }
 
 .download-button {
@@ -896,6 +930,30 @@ button {
   }
 }
 
+@keyframes header-load-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-0.85rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes hero-load-in {
+  0% {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 860px) {
   .features-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1036,6 +1094,16 @@ button {
   }
 
   .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+  }
+
+  .site-header {
+    opacity: 1;
+    transform: translateX(-50%);
+  }
+
+  .hero-inner {
     opacity: 1;
     transform: none;
   }

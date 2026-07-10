@@ -222,6 +222,8 @@ function Hero({
   onNavigate,
 }) {
   const [showScrollCue, setShowScrollCue] = useState(true)
+  const [hasDownloaded, setHasDownloaded] = useState(false)
+  const downloadMessageTimerRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -232,6 +234,14 @@ function Hero({
     window.addEventListener('scroll', handleScroll, { passive: true })
 
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (downloadMessageTimerRef.current) {
+        window.clearTimeout(downloadMessageTimerRef.current)
+      }
+    }
   }, [])
 
   return (
@@ -264,13 +274,24 @@ function Hero({
         </h1>
         <p>{siteConfig.tagline}</p>
         <a
-          className="download-button"
+          className={`download-button ${hasDownloaded ? 'download-button-complete' : ''}`}
           href={latestRelease.downloadUrl}
           download
-          onClick={() => onDownload(latestRelease.version)}
+          onClick={() => {
+            setHasDownloaded(true)
+            if (downloadMessageTimerRef.current) {
+              window.clearTimeout(downloadMessageTimerRef.current)
+            }
+            downloadMessageTimerRef.current = window.setTimeout(() => {
+              setHasDownloaded(false)
+            }, 2200)
+            onDownload(latestRelease.version)
+          }}
         >
-          <Download size={20} />
-          Download for Windows
+          <Download className="download-button-icon" size={20} />
+          <span className="download-button-text">
+            {hasDownloaded ? 'Thanks for downloading!' : 'Download for Windows'}
+          </span>
         </a>
         <span className="hero-version">
           {latestRelease.version} · {latestRelease.date}
