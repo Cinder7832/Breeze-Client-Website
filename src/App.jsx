@@ -11,6 +11,7 @@ import {
   Search,
   UserCircle,
   Users,
+  X,
 } from 'lucide-react'
 import { features, siteConfig, versions } from './siteData'
 
@@ -463,14 +464,24 @@ function VersionHistory({ releases, onDownload }) {
         <h2>Version History</h2>
       </Reveal>
 
-      <Reveal as="label" className="search-box" delay={70}>
+      <Reveal className="search-box" delay={70}>
         <Search size={22} />
         <input
           type="search"
+          aria-label="Search versions or changes"
           placeholder="Search versions or changes..."
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
+        <button
+          className="search-clear"
+          type="button"
+          aria-label="Clear search"
+          disabled={!query}
+          onClick={() => setQuery('')}
+        >
+          <X size={16} />
+        </button>
       </Reveal>
 
       <div className="versions-list">
