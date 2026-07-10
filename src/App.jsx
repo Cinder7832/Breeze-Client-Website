@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   BarChart3,
   BookOpen,
   Calendar,
   ChevronDown,
   Download,
-  GitBranch,
   MessageSquare,
   RefreshCcw,
   Search,
@@ -25,11 +24,23 @@ const featureIcons = {
 
 function BreezeLogo() {
   return (
-    <span className="logo-mark" aria-hidden="true">
-      <span />
-      <span />
-      <span />
-    </span>
+    <img className="logo-mark" src="/icon.png" alt="" aria-hidden="true" />
+  )
+}
+
+function GitHubLogo() {
+  return (
+    <svg
+      className="github-mark"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        fill="currentColor"
+        d="M12 2C6.48 2 2 6.58 2 12.24c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-1.04-.01-1.89-2.78.62-3.37-1.21-3.37-1.21-.45-1.19-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.93.86.09-.67.35-1.12.64-1.38-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.98c.85 0 1.7.12 2.5.35 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.91 0 1.38-.01 2.49-.01 2.83 0 .27.18.59.69.49A10.18 10.18 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
+      />
+    </svg>
   )
 }
 
@@ -43,7 +54,7 @@ function Header() {
 
       <nav className="nav-links" aria-label="Primary navigation">
         <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer">
-          <GitBranch size={17} />
+          <GitHubLogo />
           GitHub
         </a>
         <a href="#versions">Versions</a>
@@ -53,6 +64,19 @@ function Header() {
 }
 
 function Hero() {
+  const [showScrollCue, setShowScrollCue] = useState(true)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollCue(window.scrollY < 80)
+    }
+
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <section className="hero" id="top">
       <div className="hero-glow" />
@@ -60,7 +84,7 @@ function Hero() {
         <BreezeLogo />
         <h1>{siteConfig.name}</h1>
         <p>{siteConfig.tagline}</p>
-        <a className="download-button" href={siteConfig.downloadUrl}>
+        <a className="download-button" href={siteConfig.downloadUrl} download>
           <Download size={20} />
           Download for Windows
         </a>
@@ -68,7 +92,11 @@ function Hero() {
           {versions[0].version} · {versions[0].date}
         </span>
       </div>
-      <a className="scroll-cue" href="#features" aria-label="Scroll to features">
+      <a
+        className={`scroll-cue ${showScrollCue ? '' : 'scroll-cue-hidden'}`}
+        href="#features"
+        aria-label="Scroll to features"
+      >
         <ChevronDown size={22} />
       </a>
     </section>
@@ -108,7 +136,15 @@ function VersionCard({ release }) {
       <div className="version-topline">
         <div className="version-title-row">
           <h3>{release.version}</h3>
-          {release.label ? <span className="release-label">{release.label}</span> : null}
+          {release.label ? (
+            <span
+              className={`release-label ${
+                release.label.toLowerCase() === 'unsupported' ? 'release-label-danger' : ''
+              }`}
+            >
+              {release.label}
+            </span>
+          ) : null}
         </div>
 
         <div className="version-meta">
@@ -120,7 +156,7 @@ function VersionCard({ release }) {
             <Download size={16} />
             {release.downloads}
           </span>
-          <a className="small-download" href={release.downloadUrl}>
+          <a className="small-download" href={release.downloadUrl} download>
             <Download size={17} />
             Download
           </a>

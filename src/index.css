@@ -4,7 +4,9 @@
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
+  font-size: 16px;
   font-synthesis: none;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
 }
 
@@ -21,8 +23,9 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 50% 12%, rgba(120, 83, 243, 0.18), transparent 34rem),
-    radial-gradient(circle at 15% 30%, rgba(89, 56, 210, 0.13), transparent 28rem),
+    radial-gradient(ellipse at 50% 18%, rgba(120, 83, 243, 0.1), transparent 46rem),
+    radial-gradient(ellipse at 50% 58%, rgba(96, 67, 210, 0.12), transparent 48rem),
+    radial-gradient(ellipse at 14% 32%, rgba(89, 56, 210, 0.07), transparent 34rem),
     linear-gradient(180deg, #09091d 0%, #060614 38%, #050513 100%);
 }
 
@@ -69,18 +72,18 @@ input {
   left: 50%;
   z-index: 20;
   display: flex;
-  width: min(80rem, calc(100% - 2rem));
+  width: min(64rem, calc(100% - 2rem));
   min-height: 3.75rem;
   align-items: center;
   justify-content: space-between;
   padding: 0 1.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1.25rem;
-  background: rgba(24, 22, 44, 0.74);
+  background: rgba(24, 22, 44, 0.46);
   box-shadow:
-    0 18px 70px rgba(0, 0, 0, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(18px);
+    0 18px 70px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
   transform: translateX(-50%);
 }
 
@@ -93,70 +96,39 @@ input {
 
 .brand {
   gap: 0.75rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .nav-links {
   gap: 1.75rem;
-  color: rgba(246, 243, 255, 0.57);
-  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.35;
 }
 
 .nav-links a {
   gap: 0.45rem;
-  transition:
-    color 180ms ease,
-    transform 180ms ease;
+  transition: color 180ms ease;
+}
+
+.github-mark {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex: 0 0 auto;
 }
 
 .nav-links a:hover {
   color: #f6f3ff;
-  transform: translateY(-1px);
 }
 
 .logo-mark {
-  position: relative;
-  display: inline-grid;
   width: 2.25rem;
-  height: 1.8rem;
+  height: 2.25rem;
   flex: 0 0 auto;
-  color: #8b6ff4;
-}
-
-.logo-mark span {
-  position: absolute;
-  display: block;
-  background: linear-gradient(135deg, #9b7dff, #6747df);
-  box-shadow: 0 0 24px rgba(139, 111, 244, 0.35);
-}
-
-.logo-mark span:nth-child(1) {
-  right: 0.1rem;
-  top: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-  border: 0.34rem solid currentColor;
-  border-bottom-color: transparent;
-  border-left-color: transparent;
-  border-radius: 50%;
-  background: transparent;
-  transform: rotate(42deg);
-}
-
-.logo-mark span:nth-child(2) {
-  bottom: 0.63rem;
-  left: 0.15rem;
-  width: 1.95rem;
-  height: 0.38rem;
-  border-radius: 999px;
-}
-
-.logo-mark span:nth-child(3) {
-  bottom: 0;
-  left: 0.15rem;
-  width: 1.95rem;
-  height: 0.38rem;
-  border-radius: 999px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 18px rgba(139, 111, 244, 0.42));
 }
 
 .hero {
@@ -164,17 +136,17 @@ input {
   display: grid;
   min-height: 100vh;
   place-items: center;
-  padding: 9rem 1.5rem 5rem;
+  padding: 8rem 1.5rem 5rem;
 }
 
 .hero-glow {
   position: absolute;
-  width: min(48rem, 82vw);
-  height: min(48rem, 82vw);
+  width: min(64rem, 95vw);
+  height: min(48rem, 78vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(116, 79, 235, 0.2), transparent 68%);
-  filter: blur(8px);
-  opacity: 0.95;
+  background: radial-gradient(ellipse, rgba(116, 79, 235, 0.12), transparent 72%);
+  filter: blur(26px);
+  opacity: 0.8;
 }
 
 .hero-inner {
@@ -186,10 +158,9 @@ input {
 }
 
 .hero .logo-mark {
-  width: 5.3rem;
-  height: 4.2rem;
-  margin-bottom: 3.4rem;
-  transform: scale(1.15);
+  width: 4.6rem;
+  height: 4.6rem;
+  margin-bottom: 2.9rem;
 }
 
 .hero h1 {
@@ -198,17 +169,18 @@ input {
   background: linear-gradient(95deg, #ffffff 8%, #f3efff 48%, #a995ec 100%);
   background-clip: text;
   color: transparent;
-  font-size: clamp(4.1rem, 10vw, 8rem);
-  font-weight: 950;
+  font-size: clamp(4rem, 7.5vw, 6rem);
+  font-weight: 900;
   letter-spacing: 0;
-  line-height: 0.92;
+  line-height: 1;
 }
 
 .hero p {
-  margin: 2rem 0 2.4rem;
-  color: rgba(246, 243, 255, 0.38);
-  font-size: clamp(1.05rem, 2vw, 1.35rem);
-  font-weight: 800;
+  margin: 1.75rem 0 2.3rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
 }
 
 .download-button,
@@ -218,7 +190,9 @@ input {
   justify-content: center;
   gap: 0.7rem;
   border: 0;
-  font-weight: 850;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.45;
   transition:
     transform 180ms ease,
     box-shadow 180ms ease,
@@ -226,7 +200,7 @@ input {
 }
 
 .download-button {
-  min-width: min(21.5rem, 100%);
+  min-width: min(17.25rem, 100%);
   min-height: 4rem;
   padding: 0 2rem;
   border-radius: 999px;
@@ -237,15 +211,21 @@ input {
 
 .download-button:hover,
 .small-download:hover {
-  transform: translateY(-2px);
+  transform: scale(1.04);
+}
+
+.download-button:active,
+.small-download:active {
+  transform: scale(0.96);
 }
 
 .hero-version {
   display: block;
   margin-top: 1rem;
-  color: rgba(246, 243, 255, 0.25);
-  font-size: 0.95rem;
-  font-weight: 800;
+  color: rgba(255, 255, 255, 0.28);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.35;
 }
 
 .scroll-cue {
@@ -257,11 +237,23 @@ input {
   height: 2.5rem;
   place-items: center;
   color: rgba(246, 243, 255, 0.24);
+  opacity: 1;
   transform: translateX(-50%);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease,
+    visibility 220ms ease;
+}
+
+.scroll-cue-hidden {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-50%) translateY(0.35rem);
+  pointer-events: none;
 }
 
 .section {
-  width: min(80rem, calc(100% - 2rem));
+  width: min(64rem, calc(100% - 2rem));
   margin: 0 auto;
   padding: 7rem 0;
 }
@@ -275,8 +267,8 @@ input {
   display: block;
   margin-bottom: 1.25rem;
   color: #9f83ff;
-  font-size: 0.95rem;
-  font-weight: 900;
+  font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -286,8 +278,8 @@ input {
   background: linear-gradient(95deg, #ffffff 15%, #d9d0ff 100%);
   background-clip: text;
   color: transparent;
-  font-size: clamp(3rem, 6vw, 4.35rem);
-  font-weight: 950;
+  font-size: clamp(2.6rem, 3.75vw, 3rem);
+  font-weight: 900;
   letter-spacing: 0;
   line-height: 1;
 }
@@ -312,16 +304,16 @@ input {
 }
 
 .feature-card {
-  min-height: 18.8rem;
-  padding: 1.9rem;
+  min-height: 15.25rem;
+  padding: 1.5rem;
   border-radius: 1.15rem;
 }
 
 .feature-icon {
   display: grid;
-  width: 3.75rem;
-  height: 3.75rem;
-  margin-bottom: 2rem;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.85rem;
   place-items: center;
   border-radius: 0.9rem;
   background: linear-gradient(135deg, rgba(113, 76, 227, 0.7), rgba(77, 55, 143, 0.82));
@@ -330,32 +322,37 @@ input {
 
 .feature-card h3 {
   margin: 0 0 0.95rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.35rem;
-  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .feature-card p {
   max-width: 28rem;
   margin: 0;
-  color: rgba(246, 243, 255, 0.42);
-  font-size: 1.1rem;
-  font-weight: 700;
-  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.625;
 }
 
 .version-section {
-  width: min(52.5rem, calc(100% - 2rem));
+  width: min(42rem, calc(100% - 2rem));
   padding-top: 8rem;
 }
 
 .version-heading {
-  margin-bottom: 4.5rem;
+  margin-bottom: 4rem;
+}
+
+.version-heading h2 {
+  font-size: clamp(2.25rem, 3.2vw, 2.25rem);
 }
 
 .search-box {
   display: flex;
-  min-height: 3.65rem;
+  min-height: 2.875rem;
   align-items: center;
   gap: 0.85rem;
   margin-bottom: 2.55rem;
@@ -370,8 +367,9 @@ input {
   outline: 0;
   background: transparent;
   color: #f6f3ff;
-  font-size: 1.05rem;
-  font-weight: 750;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.45;
 }
 
 .search-box input::placeholder {
@@ -384,7 +382,7 @@ input {
 }
 
 .version-card {
-  padding: 1.85rem;
+  padding: 1.5rem;
   border-radius: 1.15rem;
 }
 
@@ -410,21 +408,28 @@ input {
 
 .version-title-row h3 {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
+  font-weight: 700;
   line-height: 1.1;
 }
 
 .release-label {
   display: inline-flex;
-  min-height: 1.6rem;
+  min-height: 1.3rem;
   align-items: center;
-  padding: 0 0.65rem;
+  padding: 0 0.5rem;
   border: 1px solid rgba(155, 125, 255, 0.45);
   border-radius: 999px;
   background: rgba(112, 75, 225, 0.28);
   color: #bcaaff;
-  font-size: 0.78rem;
-  font-weight: 850;
+  font-size: 0.625rem;
+  font-weight: 600;
+}
+
+.release-label-danger {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(185, 28, 28, 0.22);
+  color: #f87171;
 }
 
 .version-meta {
@@ -432,8 +437,9 @@ input {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 0.85rem;
-  color: rgba(246, 243, 255, 0.36);
-  font-weight: 850;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .version-meta span {
@@ -441,33 +447,40 @@ input {
 }
 
 .small-download {
-  min-height: 2.7rem;
-  padding: 0 1.05rem;
+  min-height: 2.125rem;
+  padding: 0 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 0.9rem;
   background: rgba(255, 255, 255, 0.055);
-  color: rgba(246, 243, 255, 0.58);
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
 }
 
 .version-card h4 {
   margin: 0 0 1.25rem;
-  color: rgba(246, 243, 255, 0.55);
-  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.625;
 }
 
 .release-notes {
   display: grid;
   gap: 1.1rem;
-  color: rgba(246, 243, 255, 0.5);
-  font-size: 1rem;
-  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  font-weight: 400;
   line-height: 1.45;
 }
 
 .release-notes h5 {
   margin: 0 0 0.65rem;
-  color: rgba(246, 243, 255, 0.54);
-  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.625;
 }
 
 .release-notes ul {
@@ -487,7 +500,8 @@ input {
   background: transparent;
   color: #a88dff;
   cursor: pointer;
-  font-weight: 850;
+  font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .show-more svg {
@@ -510,12 +524,12 @@ input {
   gap: 0.65rem;
   padding: 4rem 1.5rem 4.5rem;
   color: rgba(246, 243, 255, 0.42);
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .footer .logo-mark {
   width: 2rem;
-  height: 1.55rem;
+  height: 2rem;
 }
 
 .footer p {
@@ -566,11 +580,10 @@ input {
 
   .hero .logo-mark {
     margin-bottom: 3rem;
-    transform: scale(0.98);
   }
 
   .hero h1 {
-    font-size: clamp(4rem, 17vw, 5.5rem);
+    font-size: clamp(3.6rem, 15vw, 5rem);
   }
 
   .hero p {
@@ -637,7 +650,7 @@ input {
     font-size: 0.84rem;
   }
 
-  .nav-links a:first-child svg {
+  .nav-links a:first-child .github-mark {
     display: none;
   }
 

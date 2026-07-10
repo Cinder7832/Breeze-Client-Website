@@ -2,7 +2,8 @@ export const siteConfig = {
   name: 'Breeze Client',
   tagline: 'Electron Based Game Client',
   githubUrl: 'https://github.com/Cinder7832/Nexus-Launcher',
-  downloadUrl: 'https://github.com/Cinder7832/Nexus-Launcher/releases/latest',
+  downloadUrl:
+    'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v5.0.1/Breeze.Client.Setup.5.0.1.exe',
 }
 
 export const features = [
