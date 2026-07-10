@@ -24,17 +24,7 @@ const featureIcons = {
   users: Users,
 }
 
-const clickStorageKey = 'breeze-client-download-clicks'
-
-function readDownloadClickCounts() {
-  try {
-    const storedCounts = window.localStorage.getItem(clickStorageKey)
-
-    return storedCounts ? JSON.parse(storedCounts) : {}
-  } catch {
-    return {}
-  }
-}
+const releaseRefreshIntervalMs = 60_000
 
 function formatReleaseDate(date) {
   return new Intl.DateTimeFormat('en-US', {
@@ -59,6 +49,8 @@ function mergeGitHubReleaseData(baseVersions, githubReleases) {
     return {
       ...version,
       date: release?.published_at ? formatReleaseDate(release.published_at) : version.date,
+      downloads:
+        typeof installer?.download_count === 'number' ? installer.download_count : version.downloads,
       downloadUrl: installer?.browser_download_url ?? version.downloadUrl,
     }
   })
@@ -66,15 +58,15 @@ function mergeGitHubReleaseData(baseVersions, githubReleases) {
 
 function useLiveVersions() {
   const [releaseVersions, setReleaseVersions] = useState(versions)
-  const [clickCounts, setClickCounts] = useState(readDownloadClickCounts)
+  const [pendingClickCounts, setPendingClickCounts] = useState({})
 
   const liveVersions = useMemo(
     () =>
       releaseVersions.map((version) => ({
         ...version,
-        downloads: clickCounts[version.version] ?? 0,
+        downloads: version.downloads + (pendingClickCounts[version.version] ?? 0),
       })),
-    [clickCounts, releaseVersions],
+    [pendingClickCounts, releaseVersions],
   )
 
   const loadReleaseData = useCallback(async (signal) => {
@@ -87,6 +79,7 @@ function useLiveVersions() {
 
       const githubReleases = await response.json()
       setReleaseVersions(mergeGitHubReleaseData(versions, githubReleases))
+      setPendingClickCounts({})
     } catch (error) {
       if (error.name !== 'AbortError') {
         setReleaseVersions(versions)
@@ -95,28 +88,22 @@ function useLiveVersions() {
   }, [])
 
   const registerDownloadClick = useCallback((version) => {
-    setClickCounts((currentCounts) => {
-      const nextCounts = {
-        ...currentCounts,
-        [version]: (currentCounts[version] ?? 0) + 1,
-      }
-
-      try {
-        window.localStorage.setItem(clickStorageKey, JSON.stringify(nextCounts))
-      } catch {
-        // Keep the in-memory click count even if browser storage is unavailable.
-      }
-
-      return nextCounts
-    })
+    setPendingClickCounts((currentCounts) => ({
+      ...currentCounts,
+      [version]: (currentCounts[version] ?? 0) + 1,
+    }))
   }, [])
 
   useEffect(() => {
     const controller = new AbortController()
 
     loadReleaseData(controller.signal)
+    const refreshId = window.setInterval(() => loadReleaseData(controller.signal), releaseRefreshIntervalMs)
 
-    return () => controller.abort()
+    return () => {
+      controller.abort()
+      window.clearInterval(refreshId)
+    }
   }, [loadReleaseData])
 
   return [liveVersions, registerDownloadClick]
