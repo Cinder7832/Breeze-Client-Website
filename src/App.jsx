@@ -172,14 +172,13 @@ function GitHubLogo() {
   )
 }
 
-function Header({ onCraigSurprise }) {
+function Header() {
   return (
     <header className="site-header">
       <a
         className="brand"
         href="#top"
         aria-label={`${siteConfig.name} home`}
-        onClick={(event) => onCraigSurprise('header', event)}
       >
         <BreezeLogo />
         <span>{siteConfig.name}</span>
@@ -489,7 +488,7 @@ function App() {
 
   return (
     <div className="site-shell">
-      <Header onCraigSurprise={triggerCraigSurprise} />
+      <Header />
       <main>
         <Hero
           activeCraigTarget={activeCraigTarget}
