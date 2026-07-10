@@ -5,6 +5,7 @@ import {
   Calendar,
   ChevronDown,
   Download,
+  History,
   MessageSquare,
   RefreshCcw,
   Search,
@@ -204,6 +205,7 @@ function Header({ onNavigate }) {
             onNavigate('versions')
           }}
         >
+          <History size={16} />
           Versions
         </a>
       </nav>
