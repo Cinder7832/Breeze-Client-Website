@@ -65,7 +65,7 @@ export const versions = [
     version: 'v5.0.1',
     label: 'Latest',
     date: 'May 28, 2026',
-    downloads: 46,
+    downloads: 0,
     downloadUrl: downloadUrls['v5.0.1'],
     title: 'Breeze Client 5.0.1 Update',
     sections: [
@@ -108,7 +108,7 @@ export const versions = [
   {
     version: 'v5.0.0',
     date: 'May 18, 2026',
-    downloads: 24,
+    downloads: 0,
     downloadUrl: downloadUrls['v5.0.0'],
     title: 'Breeze Client 5.0.0 Update',
     sections: [
@@ -143,7 +143,7 @@ export const versions = [
   {
     version: 'v4.0.1',
     date: 'Apr 14, 2026',
-    downloads: 43,
+    downloads: 0,
     downloadUrl: downloadUrls['v4.0.1'],
     title: 'Headline Features and Fixes',
     sections: [
@@ -169,7 +169,7 @@ export const versions = [
   {
     version: 'v4.0.0',
     date: 'Apr 3, 2026',
-    downloads: 56,
+    downloads: 0,
     downloadUrl: downloadUrls['v4.0.0'],
     title: 'Breeze Client 4.0.0 Update',
     sections: [
@@ -197,7 +197,7 @@ export const versions = [
     version: 'v3.0.2',
     label: 'Unsupported',
     date: 'Apr 1, 2026',
-    downloads: 5,
+    downloads: 0,
     downloadUrl: downloadUrls['v3.0.2'],
     title: 'Maintenance Update',
     sections: [
@@ -215,7 +215,7 @@ export const versions = [
     version: 'v3.0.1',
     label: 'Unsupported',
     date: 'Apr 10, 2026',
-    downloads: 2,
+    downloads: 0,
     downloadUrl: downloadUrls['v3.0.1'],
     title: 'Small Fixes',
     sections: [
@@ -233,7 +233,7 @@ export const versions = [
     version: 'v3.0.0',
     label: 'Unsupported',
     date: 'Apr 10, 2026',
-    downloads: 3,
+    downloads: 0,
     downloadUrl: downloadUrls['v3.0.0'],
     title: 'Breeze Client 3.0.0 Update',
     sections: [

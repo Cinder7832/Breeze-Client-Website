@@ -22,6 +22,18 @@ const featureIcons = {
   users: Users,
 }
 
+const clickStorageKey = 'breeze-client-download-clicks'
+
+function readDownloadClickCounts() {
+  try {
+    const storedCounts = window.localStorage.getItem(clickStorageKey)
+
+    return storedCounts ? JSON.parse(storedCounts) : {}
+  } catch {
+    return {}
+  }
+}
+
 function formatReleaseDate(date) {
   return new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
@@ -45,14 +57,23 @@ function mergeGitHubReleaseData(baseVersions, githubReleases) {
     return {
       ...version,
       date: release?.published_at ? formatReleaseDate(release.published_at) : version.date,
-      downloads: installer?.download_count ?? version.downloads,
       downloadUrl: installer?.browser_download_url ?? version.downloadUrl,
     }
   })
 }
 
 function useLiveVersions() {
-  const [liveVersions, setLiveVersions] = useState(versions)
+  const [releaseVersions, setReleaseVersions] = useState(versions)
+  const [clickCounts, setClickCounts] = useState(readDownloadClickCounts)
+
+  const liveVersions = useMemo(
+    () =>
+      releaseVersions.map((version) => ({
+        ...version,
+        downloads: clickCounts[version.version] ?? 0,
+      })),
+    [clickCounts, releaseVersions],
+  )
 
   const loadReleaseData = useCallback(async (signal) => {
     try {
@@ -63,12 +84,29 @@ function useLiveVersions() {
       }
 
       const githubReleases = await response.json()
-      setLiveVersions(mergeGitHubReleaseData(versions, githubReleases))
+      setReleaseVersions(mergeGitHubReleaseData(versions, githubReleases))
     } catch (error) {
       if (error.name !== 'AbortError') {
-        setLiveVersions(versions)
+        setReleaseVersions(versions)
       }
     }
+  }, [])
+
+  const registerDownloadClick = useCallback((version) => {
+    setClickCounts((currentCounts) => {
+      const nextCounts = {
+        ...currentCounts,
+        [version]: (currentCounts[version] ?? 0) + 1,
+      }
+
+      try {
+        window.localStorage.setItem(clickStorageKey, JSON.stringify(nextCounts))
+      } catch {
+        // Keep the in-memory click count even if browser storage is unavailable.
+      }
+
+      return nextCounts
+    })
   }, [])
 
   useEffect(() => {
@@ -79,7 +117,7 @@ function useLiveVersions() {
     return () => controller.abort()
   }, [loadReleaseData])
 
-  return [liveVersions, loadReleaseData]
+  return [liveVersions, registerDownloadClick]
 }
 
 function BreezeLogo() {
@@ -144,7 +182,12 @@ function Hero({ latestRelease, onDownload }) {
         <BreezeLogo />
         <h1>{siteConfig.name}</h1>
         <p>{siteConfig.tagline}</p>
-        <a className="download-button" href={latestRelease.downloadUrl} download onClick={onDownload}>
+        <a
+          className="download-button"
+          href={latestRelease.downloadUrl}
+          download
+          onClick={() => onDownload(latestRelease.version)}
+        >
           <Download size={20} />
           Download for Windows
         </a>
@@ -217,7 +260,12 @@ function VersionCard({ release, onDownload }) {
             {release.downloads}
           </span>
           {release.downloadUrl ? (
-            <a className="small-download" href={release.downloadUrl} download onClick={onDownload}>
+            <a
+              className="small-download"
+              href={release.downloadUrl}
+              download
+              onClick={() => onDownload(release.version)}
+            >
               <Download size={17} />
               Download
             </a>
@@ -326,10 +374,7 @@ function Footer() {
 }
 
 function App() {
-  const [liveVersions, refreshReleaseData] = useLiveVersions()
-  const handleDownloadClick = () => {
-    window.setTimeout(() => refreshReleaseData(), 4000)
-  }
+  const [liveVersions, handleDownloadClick] = useLiveVersions()
 
   return (
     <div className="site-shell">
