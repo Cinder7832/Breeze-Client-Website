@@ -32,12 +32,22 @@ body::before {
   position: fixed;
   inset: 0;
   z-index: -2;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
-  background-size: 56px 56px;
+  background:
+    radial-gradient(ellipse at 16% 24%, rgba(7, 7, 24, 0.74), transparent 26rem),
+    radial-gradient(ellipse at 84% 19%, rgba(8, 8, 27, 0.72), transparent 24rem),
+    radial-gradient(ellipse at 24% 76%, rgba(6, 6, 22, 0.76), transparent 28rem),
+    radial-gradient(ellipse at 76% 78%, rgba(7, 7, 23, 0.82), transparent 30rem),
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    auto,
+    auto,
+    58px 58px,
+    58px 58px;
   content: "";
-  mask-image: radial-gradient(circle at center, black, transparent 80%);
+  mask-image: radial-gradient(circle at center, black, transparent 88%);
 }
 
 body::after {
@@ -45,12 +55,14 @@ body::after {
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse at 50% 20%, rgba(148, 116, 255, 0.26), transparent 46rem),
-    radial-gradient(ellipse at 50% 58%, rgba(122, 92, 250, 0.34), transparent 54rem),
-    radial-gradient(ellipse at 18% 32%, rgba(118, 88, 250, 0.19), transparent 36rem),
-    linear-gradient(90deg, rgba(146, 111, 255, 0.15), transparent 28%, transparent 72%, rgba(146, 111, 255, 0.15)),
-    radial-gradient(circle at 50% 52%, transparent, rgba(3, 3, 13, 0.2) 84%),
-    linear-gradient(180deg, #131333 0%, #10102b 42%, #0c0c26 100%);
+    radial-gradient(ellipse at 49% 42%, rgba(105, 78, 215, 0.34), transparent 31rem),
+    radial-gradient(ellipse at 35% 31%, rgba(87, 66, 177, 0.2), transparent 21rem),
+    radial-gradient(ellipse at 66% 33%, rgba(114, 89, 230, 0.18), transparent 24rem),
+    radial-gradient(ellipse at 52% 69%, rgba(86, 64, 171, 0.2), transparent 28rem),
+    radial-gradient(ellipse at 12% 49%, rgba(43, 36, 103, 0.24), transparent 28rem),
+    radial-gradient(ellipse at 88% 48%, rgba(35, 31, 88, 0.26), transparent 30rem),
+    radial-gradient(circle at 50% 48%, transparent, rgba(3, 3, 13, 0.44) 72%),
+    linear-gradient(180deg, #10102b 0%, #0c0c26 48%, #09091d 100%);
   content: "";
   pointer-events: none;
 }
