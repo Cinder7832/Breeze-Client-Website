@@ -2,6 +2,7 @@ export const siteConfig = {
   name: 'Breeze Client',
   tagline: 'Electron Based Game Client',
   githubUrl: 'https://github.com/Cinder7832/Nexus-Launcher',
+  releasesApiUrl: 'https://api.github.com/repos/Cinder7832/Nexus-Launcher/releases?per_page=100',
   downloadUrl:
     'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v5.0.1/Breeze.Client.Setup.5.0.1.exe',
 }
@@ -13,6 +14,10 @@ const downloadUrls = {
     'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v5.0.0/Breeze.Client.Setup.5.0.0.exe',
   'v4.0.1':
     'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v4.0.1/Nexus.Launcher.Setup.4.0.1.exe',
+  'v4.0.0':
+    'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v4.0.0/Nexus.Launcher.Setup.4.0.0.exe',
+  'v3.0.2':
+    'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v3.0.2/Nexus.Launcher.Setup.3.0.2.exe',
   'v3.0.1':
     'https://github.com/Cinder7832/Nexus-Launcher/releases/download/v3.0.1/Nexus.Launcher.Setup.3.0.1.exe',
   'v3.0.0':
@@ -60,7 +65,7 @@ export const versions = [
     version: 'v5.0.1',
     label: 'Latest',
     date: 'May 28, 2026',
-    downloads: 24,
+    downloads: 46,
     downloadUrl: downloadUrls['v5.0.1'],
     title: 'Breeze Client 5.0.1 Update',
     sections: [
@@ -103,7 +108,7 @@ export const versions = [
   {
     version: 'v5.0.0',
     date: 'May 18, 2026',
-    downloads: 8,
+    downloads: 24,
     downloadUrl: downloadUrls['v5.0.0'],
     title: 'Breeze Client 5.0.0 Update',
     sections: [
@@ -138,7 +143,7 @@ export const versions = [
   {
     version: 'v4.0.1',
     date: 'Apr 14, 2026',
-    downloads: 30,
+    downloads: 43,
     downloadUrl: downloadUrls['v4.0.1'],
     title: 'Headline Features and Fixes',
     sections: [
@@ -163,9 +168,9 @@ export const versions = [
   },
   {
     version: 'v4.0.0',
-    date: 'Apr 10, 2026',
-    downloads: 10,
-    downloadUrl: null,
+    date: 'Apr 3, 2026',
+    downloads: 56,
+    downloadUrl: downloadUrls['v4.0.0'],
     title: 'Breeze Client 4.0.0 Update',
     sections: [
       {
@@ -191,9 +196,9 @@ export const versions = [
   {
     version: 'v3.0.2',
     label: 'Unsupported',
-    date: 'Apr 10, 2026',
-    downloads: 0,
-    downloadUrl: null,
+    date: 'Apr 1, 2026',
+    downloads: 5,
+    downloadUrl: downloadUrls['v3.0.2'],
     title: 'Maintenance Update',
     sections: [
       {
@@ -210,7 +215,7 @@ export const versions = [
     version: 'v3.0.1',
     label: 'Unsupported',
     date: 'Apr 10, 2026',
-    downloads: 0,
+    downloads: 2,
     downloadUrl: downloadUrls['v3.0.1'],
     title: 'Small Fixes',
     sections: [
@@ -228,7 +233,7 @@ export const versions = [
     version: 'v3.0.0',
     label: 'Unsupported',
     date: 'Apr 10, 2026',
-    downloads: 0,
+    downloads: 3,
     downloadUrl: downloadUrls['v3.0.0'],
     title: 'Breeze Client 3.0.0 Update',
     sections: [
@@ -254,7 +259,7 @@ export const versions = [
   {
     version: 'v2.0.0',
     label: 'Unsupported',
-    date: 'May 3, 2026',
+    date: 'Apr 10, 2026',
     downloads: 0,
     downloadUrl: downloadUrls['v2.0.0'],
     title: 'Breeze Client 2.0.0 Update',

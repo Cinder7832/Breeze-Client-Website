@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   BarChart3,
   BookOpen,
@@ -20,6 +20,66 @@ const featureIcons = {
   refresh: RefreshCcw,
   user: UserCircle,
   users: Users,
+}
+
+function formatReleaseDate(date) {
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+    year: 'numeric',
+  }).format(new Date(date))
+}
+
+function getInstallerAsset(release) {
+  return release.assets?.find((asset) => asset.name.toLowerCase().endsWith('.exe'))
+}
+
+function mergeGitHubReleaseData(baseVersions, githubReleases) {
+  const releasesByTag = new Map(githubReleases.map((release) => [release.tag_name, release]))
+
+  return baseVersions.map((version) => {
+    const release = releasesByTag.get(version.version)
+    const installer = release ? getInstallerAsset(release) : null
+
+    return {
+      ...version,
+      date: release?.published_at ? formatReleaseDate(release.published_at) : version.date,
+      downloads: installer?.download_count ?? version.downloads,
+      downloadUrl: installer?.browser_download_url ?? version.downloadUrl,
+    }
+  })
+}
+
+function useLiveVersions() {
+  const [liveVersions, setLiveVersions] = useState(versions)
+
+  const loadReleaseData = useCallback(async (signal) => {
+    try {
+      const response = await fetch(siteConfig.releasesApiUrl, { signal })
+
+      if (!response.ok) {
+        return
+      }
+
+      const githubReleases = await response.json()
+      setLiveVersions(mergeGitHubReleaseData(versions, githubReleases))
+    } catch (error) {
+      if (error.name !== 'AbortError') {
+        setLiveVersions(versions)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    loadReleaseData(controller.signal)
+
+    return () => controller.abort()
+  }, [loadReleaseData])
+
+  return [liveVersions, loadReleaseData]
 }
 
 function BreezeLogo() {
@@ -63,7 +123,7 @@ function Header() {
   )
 }
 
-function Hero() {
+function Hero({ latestRelease, onDownload }) {
   const [showScrollCue, setShowScrollCue] = useState(true)
 
   useEffect(() => {
@@ -84,12 +144,12 @@ function Hero() {
         <BreezeLogo />
         <h1>{siteConfig.name}</h1>
         <p>{siteConfig.tagline}</p>
-        <a className="download-button" href={siteConfig.downloadUrl} download>
+        <a className="download-button" href={latestRelease.downloadUrl} download onClick={onDownload}>
           <Download size={20} />
           Download for Windows
         </a>
         <span className="hero-version">
-          {versions[0].version} · {versions[0].date}
+          {latestRelease.version} · {latestRelease.date}
         </span>
       </div>
       <a
@@ -127,7 +187,7 @@ function FeaturesSection() {
   )
 }
 
-function VersionCard({ release }) {
+function VersionCard({ release, onDownload }) {
   const [expanded, setExpanded] = useState(false)
   const visibleSections = expanded ? release.sections : release.sections.slice(0, 2)
 
@@ -157,7 +217,7 @@ function VersionCard({ release }) {
             {release.downloads}
           </span>
           {release.downloadUrl ? (
-            <a className="small-download" href={release.downloadUrl} download>
+            <a className="small-download" href={release.downloadUrl} download onClick={onDownload}>
               <Download size={17} />
               Download
             </a>
@@ -199,17 +259,17 @@ function VersionCard({ release }) {
   )
 }
 
-function VersionHistory() {
+function VersionHistory({ releases, onDownload }) {
   const [query, setQuery] = useState('')
 
   const filteredVersions = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
 
     if (!normalizedQuery) {
-      return versions
+      return releases
     }
 
-    return versions.filter((release) => {
+    return releases.filter((release) => {
       const searchable = [
         release.version,
         release.label,
@@ -223,7 +283,7 @@ function VersionHistory() {
 
       return searchable.includes(normalizedQuery)
     })
-  }, [query])
+  }, [query, releases])
 
   return (
     <section className="section version-section" id="versions">
@@ -244,7 +304,7 @@ function VersionHistory() {
 
       <div className="versions-list">
         {filteredVersions.map((release) => (
-          <VersionCard key={release.version} release={release} />
+          <VersionCard key={release.version} release={release} onDownload={onDownload} />
         ))}
       </div>
 
@@ -266,13 +326,18 @@ function Footer() {
 }
 
 function App() {
+  const [liveVersions, refreshReleaseData] = useLiveVersions()
+  const handleDownloadClick = () => {
+    window.setTimeout(() => refreshReleaseData(), 4000)
+  }
+
   return (
     <div className="site-shell">
       <Header />
       <main>
-        <Hero />
+        <Hero latestRelease={liveVersions[0]} onDownload={handleDownloadClick} />
         <FeaturesSection />
-        <VersionHistory />
+        <VersionHistory releases={liveVersions} onDownload={handleDownloadClick} />
       </main>
       <Footer />
     </div>
