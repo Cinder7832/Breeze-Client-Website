@@ -252,15 +252,6 @@ function Hero({ activeCraigTarget, craigDropId, latestRelease, onCraigSurprise, 
           {latestRelease.version} · {latestRelease.date}
         </span>
       </div>
-      {craigDropId > 0 ? (
-        <img
-          key={craigDropId}
-          className="craig-sprite"
-          src={`${assetBaseUrl}craig.png`}
-          alt=""
-          aria-hidden="true"
-        />
-      ) : null}
       <a
         className={`scroll-cue ${showScrollCue ? '' : 'scroll-cue-hidden'}`}
         href="#features"
@@ -510,6 +501,15 @@ function App() {
         <FeaturesSection />
         <VersionHistory releases={liveVersions} onDownload={handleDownloadClick} />
       </main>
+      {craigDropId > 0 ? (
+        <img
+          key={craigDropId}
+          className="craig-sprite"
+          src={`${assetBaseUrl}craig.png`}
+          alt=""
+          aria-hidden="true"
+        />
+      ) : null}
       <Footer />
     </div>
   )

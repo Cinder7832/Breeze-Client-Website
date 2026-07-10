@@ -232,10 +232,10 @@ button {
 }
 
 .craig-sprite {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 50%;
-  z-index: 5;
+  z-index: 2147483647;
   width: clamp(6rem, 12vw, 9.5rem);
   height: auto;
   image-rendering: pixelated;
