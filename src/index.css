@@ -128,7 +128,6 @@ input {
   height: 2.25rem;
   flex: 0 0 auto;
   object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(139, 111, 244, 0.42));
 }
 
 .hero {
@@ -209,14 +208,36 @@ input {
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.3);
 }
 
-.download-button:hover,
-.small-download:hover {
+.download-button:hover {
   transform: scale(1.04);
 }
 
-.download-button:active,
-.small-download:active {
+.download-button:active {
   transform: scale(0.96);
+}
+
+.small-download:hover,
+.small-download:active {
+  transform: none;
+}
+
+.small-download:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.095);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.small-download:active {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.small-download-disabled,
+.small-download-disabled:hover,
+.small-download-disabled:active {
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(255, 255, 255, 0.38);
 }
 
 .hero-version {

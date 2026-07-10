@@ -156,10 +156,21 @@ function VersionCard({ release }) {
             <Download size={16} />
             {release.downloads}
           </span>
-          <a className="small-download" href={release.downloadUrl} download>
-            <Download size={17} />
-            Download
-          </a>
+          {release.downloadUrl ? (
+            <a className="small-download" href={release.downloadUrl} download>
+              <Download size={17} />
+              Download
+            </a>
+          ) : (
+            <span
+              className="small-download small-download-disabled"
+              title="No installer is available for this version"
+              aria-disabled="true"
+            >
+              <Download size={17} />
+              Unavailable
+            </span>
+          )}
         </div>
       </div>
 
