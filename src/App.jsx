@@ -13,6 +13,8 @@ import {
 } from 'lucide-react'
 import { features, siteConfig, versions } from './siteData'
 
+const assetBaseUrl = import.meta.env.BASE_URL
+
 const featureIcons = {
   chart: BarChart3,
   library: BookOpen,
@@ -122,7 +124,7 @@ function useLiveVersions() {
 
 function BreezeLogo() {
   return (
-    <img className="logo-mark" src="/icon.png" alt="" aria-hidden="true" />
+    <img className="logo-mark" src={`${assetBaseUrl}icon.png`} alt="" aria-hidden="true" />
   )
 }
 
