@@ -172,10 +172,15 @@ function GitHubLogo() {
   )
 }
 
-function Header() {
+function Header({ onCraigSurprise }) {
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label={`${siteConfig.name} home`}>
+      <a
+        className="brand"
+        href="#top"
+        aria-label={`${siteConfig.name} home`}
+        onClick={(event) => onCraigSurprise('header', event)}
+      >
         <BreezeLogo />
         <span>{siteConfig.name}</span>
       </a>
@@ -191,7 +196,7 @@ function Header() {
   )
 }
 
-function Hero({ latestRelease, onDownload }) {
+function Hero({ activeCraigTarget, craigDropId, latestRelease, onCraigSurprise, onDownload }) {
   const [showScrollCue, setShowScrollCue] = useState(true)
 
   useEffect(() => {
@@ -208,9 +213,31 @@ function Hero({ latestRelease, onDownload }) {
   return (
     <section className="hero" id="top">
       <div className="hero-glow" />
+      {craigDropId > 0 ? (
+        <div key={`wind-${craigDropId}`} className="wind-burst" aria-hidden="true">
+          {Array.from({ length: 18 }, (_, index) => (
+            <span key={index} />
+          ))}
+        </div>
+      ) : null}
       <div className="hero-inner">
-        <BreezeLogo />
-        <h1>{siteConfig.name}</h1>
+        <button
+          className={`hero-logo-button ${activeCraigTarget === 'hero' ? 'craig-shake' : ''}`}
+          type="button"
+          aria-label="Drop Craig"
+          onClick={() => onCraigSurprise('hero')}
+        >
+          <BreezeLogo />
+        </button>
+        <h1>
+          <button
+            className={`hero-title-button ${activeCraigTarget === 'hero' ? 'craig-shake' : ''}`}
+            type="button"
+            onClick={() => onCraigSurprise('hero')}
+          >
+            {siteConfig.name}
+          </button>
+        </h1>
         <p>{siteConfig.tagline}</p>
         <a
           className="download-button"
@@ -225,6 +252,15 @@ function Hero({ latestRelease, onDownload }) {
           {latestRelease.version} · {latestRelease.date}
         </span>
       </div>
+      {craigDropId > 0 ? (
+        <img
+          key={craigDropId}
+          className="craig-sprite"
+          src={`${assetBaseUrl}craig.png`}
+          alt=""
+          aria-hidden="true"
+        />
+      ) : null}
       <a
         className={`scroll-cue ${showScrollCue ? '' : 'scroll-cue-hidden'}`}
         href="#features"
@@ -427,12 +463,50 @@ function Footer() {
 
 function App() {
   const [liveVersions, handleDownloadClick] = useLiveVersions()
+  const [craigDropId, setCraigDropId] = useState(0)
+  const [activeCraigTarget, setActiveCraigTarget] = useState(null)
+  const craigTimerRef = useRef(null)
+  const craigLockRef = useRef(false)
+
+  const triggerCraigSurprise = useCallback((target, event) => {
+    if (craigLockRef.current) {
+      event?.preventDefault()
+      return
+    }
+
+    craigLockRef.current = true
+    setCraigDropId((currentId) => currentId + 1)
+    setActiveCraigTarget(target)
+
+    if (craigTimerRef.current) {
+      window.clearTimeout(craigTimerRef.current)
+    }
+
+    craigTimerRef.current = window.setTimeout(() => {
+      setActiveCraigTarget(null)
+      craigLockRef.current = false
+    }, 1800)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (craigTimerRef.current) {
+        window.clearTimeout(craigTimerRef.current)
+      }
+    }
+  }, [])
 
   return (
     <div className="site-shell">
-      <Header />
+      <Header onCraigSurprise={triggerCraigSurprise} />
       <main>
-        <Hero latestRelease={liveVersions[0]} onDownload={handleDownloadClick} />
+        <Hero
+          activeCraigTarget={activeCraigTarget}
+          craigDropId={craigDropId}
+          latestRelease={liveVersions[0]}
+          onCraigSurprise={triggerCraigSurprise}
+          onDownload={handleDownloadClick}
+        />
         <FeaturesSection />
         <VersionHistory releases={liveVersions} onDownload={handleDownloadClick} />
       </main>
