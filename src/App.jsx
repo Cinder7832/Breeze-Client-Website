@@ -26,6 +26,10 @@ const featureIcons = {
 
 const releaseRefreshIntervalMs = 60_000
 
+function scrollToSection(sectionId) {
+  document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 function formatReleaseDate(date) {
   return new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
@@ -172,13 +176,17 @@ function GitHubLogo() {
   )
 }
 
-function Header() {
+function Header({ onNavigate }) {
   return (
     <header className="site-header">
       <a
         className="brand"
         href="#top"
         aria-label={`${siteConfig.name} home`}
+        onClick={(event) => {
+          event.preventDefault()
+          onNavigate('top')
+        }}
       >
         <BreezeLogo />
         <span>{siteConfig.name}</span>
@@ -189,13 +197,28 @@ function Header() {
           <GitHubLogo />
           GitHub
         </a>
-        <a href="#versions">Versions</a>
+        <a
+          href="#versions"
+          onClick={(event) => {
+            event.preventDefault()
+            onNavigate('versions')
+          }}
+        >
+          Versions
+        </a>
       </nav>
     </header>
   )
 }
 
-function Hero({ activeCraigTarget, craigDropId, latestRelease, onCraigSurprise, onDownload }) {
+function Hero({
+  activeCraigTarget,
+  craigDropId,
+  latestRelease,
+  onCraigSurprise,
+  onDownload,
+  onNavigate,
+}) {
   const [showScrollCue, setShowScrollCue] = useState(true)
 
   useEffect(() => {
@@ -255,6 +278,10 @@ function Hero({ activeCraigTarget, craigDropId, latestRelease, onCraigSurprise, 
         className={`scroll-cue ${showScrollCue ? '' : 'scroll-cue-hidden'}`}
         href="#features"
         aria-label="Scroll to features"
+        onClick={(event) => {
+          event.preventDefault()
+          onNavigate('features')
+        }}
       >
         <ChevronDown size={22} />
       </a>
@@ -488,7 +515,7 @@ function App() {
 
   return (
     <div className="site-shell">
-      <Header />
+      <Header onNavigate={scrollToSection} />
       <main>
         <Hero
           activeCraigTarget={activeCraigTarget}
@@ -496,6 +523,7 @@ function App() {
           latestRelease={liveVersions[0]}
           onCraigSurprise={triggerCraigSurprise}
           onDownload={handleDownloadClick}
+          onNavigate={scrollToSection}
         />
         <FeaturesSection />
         <VersionHistory releases={liveVersions} onDownload={handleDownloadClick} />
