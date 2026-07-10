@@ -70,6 +70,21 @@ input {
   min-height: 100vh;
 }
 
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(1.15rem);
+  transition:
+    opacity 620ms ease,
+    transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .site-header {
   position: fixed;
   top: 2rem;
@@ -500,6 +515,30 @@ input {
   line-height: 1.45;
 }
 
+.release-notes-extra {
+  display: grid;
+  grid-template-rows: 0fr;
+  margin-top: -1.1rem;
+  opacity: 0;
+  transition:
+    grid-template-rows 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 260ms ease;
+}
+
+.release-notes-extra.expanded {
+  grid-template-rows: 1fr;
+  margin-top: 0;
+  opacity: 1;
+}
+
+.release-notes-extra-inner {
+  display: grid;
+  min-height: 0;
+  gap: 1.1rem;
+  overflow: hidden;
+}
+
 .release-notes h5 {
   margin: 0 0 0.65rem;
   color: rgba(255, 255, 255, 0.5);
@@ -530,7 +569,7 @@ input {
 }
 
 .show-more svg {
-  transition: transform 180ms ease;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .show-more .rotated {
@@ -681,5 +720,24 @@ input {
 
   .hero h1 {
     font-size: clamp(3.6rem, 16vw, 4.4rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 1ms !important;
+  }
+
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
   }
 }

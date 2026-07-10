@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   BarChart3,
   BookOpen,
@@ -126,6 +126,47 @@ function BreezeLogo() {
   )
 }
 
+function Reveal({ as: Component = 'div', children, className = '', delay = 0, ...props }) {
+  const ref = useRef(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const node = ref.current
+
+    if (!node) {
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(entry.target)
+        }
+      },
+      {
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.12,
+      },
+    )
+
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <Component
+      ref={ref}
+      className={`reveal-on-scroll ${isVisible ? 'is-visible' : ''} ${className}`}
+      style={{ '--reveal-delay': `${delay}ms` }}
+      {...props}
+    >
+      {children}
+    </Component>
+  )
+}
+
 function GitHubLogo() {
   return (
     <svg
@@ -209,20 +250,20 @@ function Hero({ latestRelease, onDownload }) {
 function FeaturesSection() {
   return (
     <section className="section" id="features">
-      <div className="section-heading">
+      <Reveal className="section-heading">
         <h2>Features</h2>
-      </div>
+      </Reveal>
 
       <div className="features-grid">
-        {features.map((feature) => {
+        {features.map((feature, index) => {
           const Icon = featureIcons[feature.icon]
 
           return (
-            <article className="feature-card" key={feature.title}>
+            <Reveal as="article" className="feature-card" delay={index * 65} key={feature.title}>
               <div className="feature-icon">{Icon ? <Icon size={25} /> : null}</div>
               <h3>{feature.title}</h3>
               <p>{feature.description}</p>
-            </article>
+            </Reveal>
           )
         })}
       </div>
@@ -230,12 +271,13 @@ function FeaturesSection() {
   )
 }
 
-function VersionCard({ release, onDownload }) {
+function VersionCard({ release, onDownload, delay = 0 }) {
   const [expanded, setExpanded] = useState(false)
-  const visibleSections = expanded ? release.sections : release.sections.slice(0, 2)
+  const visibleSections = release.sections.slice(0, 2)
+  const extraSections = release.sections.slice(2)
 
   return (
-    <article className="version-card">
+    <Reveal as="article" className="version-card" delay={delay}>
       <div className="version-topline">
         <div className="version-title-row">
           <h3>{release.version}</h3>
@@ -295,15 +337,31 @@ function VersionCard({ release, onDownload }) {
             </ul>
           </section>
         ))}
+        {extraSections.length > 0 ? (
+          <div className={`release-notes-extra ${expanded ? 'expanded' : ''}`}>
+            <div className="release-notes-extra-inner">
+              {extraSections.map((section) => (
+                <section key={section.heading}>
+                  <h5>{section.heading}</h5>
+                  <ul>
+                    {section.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
 
-      {release.sections.length > 2 ? (
+      {extraSections.length > 0 ? (
         <button className="show-more" type="button" onClick={() => setExpanded((value) => !value)}>
           <ChevronDown size={17} className={expanded ? 'rotated' : ''} />
           {expanded ? 'Show less' : 'Show more'}
         </button>
       ) : null}
-    </article>
+    </Reveal>
   )
 }
 
@@ -335,12 +393,12 @@ function VersionHistory({ releases, onDownload }) {
 
   return (
     <section className="section version-section" id="versions">
-      <div className="section-heading version-heading">
+      <Reveal className="section-heading version-heading">
         <span>Releases</span>
         <h2>Version History</h2>
-      </div>
+      </Reveal>
 
-      <label className="search-box">
+      <Reveal as="label" className="search-box" delay={70}>
         <Search size={22} />
         <input
           type="search"
@@ -348,11 +406,16 @@ function VersionHistory({ releases, onDownload }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-      </label>
+      </Reveal>
 
       <div className="versions-list">
-        {filteredVersions.map((release) => (
-          <VersionCard key={release.version} release={release} onDownload={onDownload} />
+        {filteredVersions.map((release, index) => (
+          <VersionCard
+            key={release.version}
+            release={release}
+            onDownload={onDownload}
+            delay={Math.min(index * 55, 220)}
+          />
         ))}
       </div>
 
