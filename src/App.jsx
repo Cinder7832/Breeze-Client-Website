@@ -195,13 +195,12 @@ function Header({ onNavigate }) {
       </a>
 
       <nav className="nav-links" aria-label="Primary navigation">
+        <a href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer">
+          Dailied
+        </a>
         <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer">
           <GitHubLogo />
           GitHub
-        </a>
-        <a href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer">
-          <Calendar size={16} />
-          Dailied
         </a>
         <a
           href="#versions"
