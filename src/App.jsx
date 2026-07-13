@@ -199,6 +199,10 @@ function Header({ onNavigate }) {
           <GitHubLogo />
           GitHub
         </a>
+        <a href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer">
+          <Calendar size={16} />
+          Dailied
+        </a>
         <a
           href="#versions"
           onClick={(event) => {

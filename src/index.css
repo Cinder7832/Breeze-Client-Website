@@ -1138,12 +1138,18 @@ button {
     font-size: 0.84rem;
   }
 
-  .nav-links a:first-child .github-mark {
+  .nav-links svg {
     display: none;
   }
 
   .hero h1 {
     font-size: clamp(3.6rem, 16vw, 4.4rem);
+  }
+}
+
+@media (max-width: 360px) {
+  .brand span {
+    display: none;
   }
 }
 
