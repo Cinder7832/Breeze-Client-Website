@@ -195,7 +195,7 @@ function Header({ onNavigate }) {
       </a>
 
       <nav className="nav-links" aria-label="Primary navigation">
-        <a href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer">
+        <a className="dailied-nav-link" href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer">
           Dailied
         </a>
         <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer">

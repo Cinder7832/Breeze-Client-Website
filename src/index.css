@@ -147,7 +147,11 @@ button {
 
 .nav-links a {
   gap: 0.45rem;
-  transition: color 180ms ease;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 }
 
 .github-mark {
@@ -156,8 +160,26 @@ button {
   flex: 0 0 auto;
 }
 
+.dailied-nav-link {
+  min-height: 2rem;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(244, 226, 166, 0.48);
+  border-radius: 999px;
+  background: #d9b44a;
+  color: #2d2a26;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(217, 180, 74, 0.16);
+}
+
 .nav-links a:hover {
   color: #f6f3ff;
+}
+
+.dailied-nav-link:hover {
+  border-color: rgba(244, 226, 166, 0.72);
+  background: #f4e2a6;
+  color: #2d2a26;
+  transform: translateY(-1px);
 }
 
 .logo-mark {
