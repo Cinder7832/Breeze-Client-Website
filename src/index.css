@@ -184,20 +184,20 @@ button {
   color: #f6f3ff;
 }
 
-.dailied-nav-link:hover {
+.nav-links a.dailied-nav-link:hover {
   border-color: rgba(244, 226, 166, 0.48);
   background: #d9b44a;
   color: #2d2a26;
 }
 
-.dailied-nav-link:focus-visible {
+.nav-links a.dailied-nav-link:focus-visible {
   outline: 2px solid rgba(244, 226, 166, 0.82);
   outline-offset: 0.18rem;
   background: #d9b44a;
   color: #2d2a26;
 }
 
-.dailied-nav-link:active {
+.nav-links a.dailied-nav-link:active {
   background: #c7a13b;
   color: #2d2a26;
   transform: scale(0.97);
