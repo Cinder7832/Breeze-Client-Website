@@ -160,7 +160,8 @@ button {
 }
 
 .dailied-nav-link {
-  min-height: 2rem;
+  height: 2rem;
+  justify-content: center;
   padding: 0 0.85rem;
   border: 1px solid rgba(244, 226, 166, 0.48);
   border-radius: 999px;
@@ -168,6 +169,7 @@ button {
   color: #2d2a26;
   font-family: Georgia, serif;
   font-weight: 700;
+  line-height: 1;
   box-shadow: 0 10px 28px rgba(217, 180, 74, 0.16);
   transform: scale(1);
   transform-origin: center;
@@ -183,8 +185,8 @@ button {
 }
 
 .dailied-nav-link:hover {
-  border-color: rgba(244, 226, 166, 0.58);
-  background: #c7a13b;
+  border-color: rgba(244, 226, 166, 0.48);
+  background: #d9b44a;
   color: #2d2a26;
 }
 
@@ -196,7 +198,7 @@ button {
 }
 
 .dailied-nav-link:active {
-  background: #b89432;
+  background: #c7a13b;
   color: #2d2a26;
   transform: scale(0.97);
 }
