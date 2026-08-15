@@ -463,7 +463,6 @@ function VersionHistory({ releases, onDownload }) {
   return (
     <section className="section version-section" id="versions">
       <Reveal className="section-heading version-heading">
-        <span>Releases</span>
         <h2>Version History</h2>
       </Reveal>
 
