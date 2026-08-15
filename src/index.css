@@ -125,7 +125,8 @@ button {
 
 .brand,
 .nav-links,
-.nav-links a {
+.nav-links a,
+.nav-dropdown-trigger {
   display: flex;
   align-items: center;
 }
@@ -145,12 +146,93 @@ button {
   line-height: 1.35;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-dropdown-trigger {
   gap: 0.45rem;
   transition:
     background 180ms ease,
     border-color 180ms ease,
     color 180ms ease;
+}
+
+.nav-dropdown {
+  position: relative;
+  min-width: max-content;
+}
+
+.nav-dropdown::after {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 0.85rem;
+  content: "";
+}
+
+.nav-dropdown-trigger {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.nav-dropdown-trigger svg {
+  transition: transform 180ms ease;
+}
+
+.nav-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.7rem);
+  right: 0;
+  width: 100%;
+  min-width: 100%;
+  padding: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.85rem;
+  background: rgba(24, 22, 44, 0.9);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(16px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-0.35rem);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 180ms ease;
+  visibility: hidden;
+}
+
+.nav-dropdown-menu a {
+  width: 100%;
+  min-height: 2.15rem;
+  justify-content: center;
+  padding: 0 0.8rem;
+  border-radius: 0.55rem;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.nav-dropdown-menu a:hover,
+.nav-dropdown-menu a:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  color: #f6f3ff;
+}
+
+.nav-dropdown:hover .nav-dropdown-menu,
+.nav-dropdown:focus-within .nav-dropdown-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.nav-dropdown:hover .nav-dropdown-trigger,
+.nav-dropdown:focus-within .nav-dropdown-trigger {
+  color: #f6f3ff;
+}
+
+.nav-dropdown:hover .nav-dropdown-trigger svg,
+.nav-dropdown:focus-within .nav-dropdown-trigger svg {
+  transform: rotate(180deg);
 }
 
 .github-mark {
@@ -159,48 +241,15 @@ button {
   flex: 0 0 auto;
 }
 
-.dailied-nav-link {
-  height: 2rem;
-  justify-content: center;
-  padding: 0 0.85rem;
-  border: 1px solid rgba(244, 226, 166, 0.48);
-  border-radius: 999px;
-  background: #d9b44a;
-  color: #2d2a26;
-  font-family: Georgia, serif;
-  font-weight: 700;
-  line-height: 1;
-  box-shadow: 0 10px 28px rgba(217, 180, 74, 0.16);
-  transform: scale(1);
-  transform-origin: center;
-  transition:
-    background 220ms cubic-bezier(0.42, 0, 0.2, 1),
-    border-color 220ms cubic-bezier(0.42, 0, 0.2, 1),
-    color 220ms cubic-bezier(0.42, 0, 0.2, 1),
-    transform 220ms cubic-bezier(0.42, 0, 0.2, 1);
-}
-
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-dropdown-trigger:hover {
   color: #f6f3ff;
 }
 
-.nav-links a.dailied-nav-link:hover {
-  border-color: rgba(244, 226, 166, 0.48);
-  background: #d9b44a;
-  color: #2d2a26;
-}
-
-.nav-links a.dailied-nav-link:focus-visible {
-  outline: 2px solid rgba(244, 226, 166, 0.82);
-  outline-offset: 0.18rem;
-  background: #d9b44a;
-  color: #2d2a26;
-}
-
-.nav-links a.dailied-nav-link:active {
-  background: #c7a13b;
-  color: #2d2a26;
-  transform: scale(0.97);
+.nav-links a:focus-visible,
+.nav-dropdown-trigger:focus-visible {
+  outline: 2px solid rgba(154, 118, 255, 0.6);
+  outline-offset: 0.25rem;
 }
 
 .logo-mark {

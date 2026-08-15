@@ -195,9 +195,17 @@ function Header({ onNavigate }) {
       </a>
 
       <nav className="nav-links" aria-label="Primary navigation">
-        <a className="dailied-nav-link" href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer">
-          Dailied
-        </a>
+        <div className="nav-dropdown">
+          <button className="nav-dropdown-trigger" type="button" aria-haspopup="true">
+            Other Projects
+            <ChevronDown size={14} />
+          </button>
+          <div className="nav-dropdown-menu" role="menu">
+            <a href={siteConfig.dailiedUrl} target="_blank" rel="noreferrer" role="menuitem">
+              Dailied
+            </a>
+          </div>
+        </div>
         <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer">
           <GitHubLogo />
           GitHub
