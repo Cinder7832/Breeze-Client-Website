@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react'
 import { features, siteConfig, versions } from './siteData'
+import { getReleaseDownloadUrl, supabase } from './supabase'
 
 const assetBaseUrl = import.meta.env.BASE_URL
 
@@ -27,6 +28,7 @@ const featureIcons = {
 }
 
 const releaseRefreshIntervalMs = 60_000
+const downloadCountRefreshIntervalMs = 30_000
 
 function scrollToSection(sectionId) {
   document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -41,38 +43,32 @@ function formatReleaseDate(date) {
   }).format(new Date(date))
 }
 
-function getInstallerAsset(release) {
-  return release.assets?.find((asset) => asset.name.toLowerCase().endsWith('.exe'))
-}
-
 function mergeGitHubReleaseData(baseVersions, githubReleases) {
   const releasesByTag = new Map(githubReleases.map((release) => [release.tag_name, release]))
 
   return baseVersions.map((version) => {
     const release = releasesByTag.get(version.version)
-    const installer = release ? getInstallerAsset(release) : null
-
     return {
       ...version,
       date: release?.published_at ? formatReleaseDate(release.published_at) : version.date,
-      downloads:
-        typeof installer?.download_count === 'number' ? installer.download_count : version.downloads,
-      downloadUrl: installer?.browser_download_url ?? version.downloadUrl,
     }
   })
 }
 
 function useLiveVersions() {
   const [releaseVersions, setReleaseVersions] = useState(versions)
-  const [pendingClickCounts, setPendingClickCounts] = useState({})
+  const [downloadCounts, setDownloadCounts] = useState(() =>
+    Object.fromEntries(versions.map((version) => [version.version, version.downloads])),
+  )
 
   const liveVersions = useMemo(
     () =>
       releaseVersions.map((version) => ({
         ...version,
-        downloads: version.downloads + (pendingClickCounts[version.version] ?? 0),
+        downloads: downloadCounts[version.version] ?? version.downloads,
+        downloadUrl: version.downloadUrl ? getReleaseDownloadUrl(version.version) : null,
       })),
-    [pendingClickCounts, releaseVersions],
+    [downloadCounts, releaseVersions],
   )
 
   const loadReleaseData = useCallback(async (signal) => {
@@ -85,7 +81,6 @@ function useLiveVersions() {
 
       const githubReleases = await response.json()
       setReleaseVersions(mergeGitHubReleaseData(versions, githubReleases))
-      setPendingClickCounts({})
     } catch (error) {
       if (error.name !== 'AbortError') {
         setReleaseVersions(versions)
@@ -93,10 +88,18 @@ function useLiveVersions() {
     }
   }, [])
 
-  const registerDownloadClick = useCallback((version) => {
-    setPendingClickCounts((currentCounts) => ({
+  const loadDownloadCounts = useCallback(async () => {
+    const { data, error } = await supabase
+      .from('release_downloads')
+      .select('version, download_count')
+
+    if (error || !data) {
+      return
+    }
+
+    setDownloadCounts((currentCounts) => ({
       ...currentCounts,
-      [version]: (currentCounts[version] ?? 0) + 1,
+      ...Object.fromEntries(data.map((release) => [release.version, release.download_count])),
     }))
   }, [])
 
@@ -112,12 +115,48 @@ function useLiveVersions() {
     }
   }, [loadReleaseData])
 
-  return [liveVersions, registerDownloadClick]
+  useEffect(() => {
+    loadDownloadCounts()
+
+    const channel = supabase
+      .channel('release-download-counts')
+      .on(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'release_downloads' },
+        ({ new: updatedRelease }) => {
+          setDownloadCounts((currentCounts) => ({
+            ...currentCounts,
+            [updatedRelease.version]: updatedRelease.download_count,
+          }))
+        },
+      )
+      .subscribe()
+
+    const refreshId = window.setInterval(loadDownloadCounts, downloadCountRefreshIntervalMs)
+
+    return () => {
+      window.clearInterval(refreshId)
+      supabase.removeChannel(channel)
+    }
+  }, [loadDownloadCounts])
+
+  return liveVersions
 }
 
 function BreezeLogo() {
   return (
     <img className="logo-mark" src={`${assetBaseUrl}icon.png`} alt="" aria-hidden="true" />
+  )
+}
+
+function AmbientBackground() {
+  return (
+    <div className="ambient-background" aria-hidden="true">
+      <div className="ambient-background-base" />
+      <div className="ambient-glow ambient-glow-primary" />
+      <div className="ambient-glow ambient-glow-secondary" />
+      <div className="ambient-background-noise" />
+    </div>
   )
 }
 
@@ -230,7 +269,6 @@ function Hero({
   craigDropId,
   latestRelease,
   onCraigSurprise,
-  onDownload,
   onNavigate,
 }) {
   const [showScrollCue, setShowScrollCue] = useState(true)
@@ -258,7 +296,6 @@ function Hero({
 
   return (
     <section className="hero" id="top">
-      <div className="hero-glow" />
       {craigDropId > 0 ? (
         <div key={`wind-${craigDropId}`} className="wind-burst" aria-hidden="true">
           {Array.from({ length: 18 }, (_, index) => (
@@ -297,7 +334,6 @@ function Hero({
             downloadMessageTimerRef.current = window.setTimeout(() => {
               setHasDownloaded(false)
             }, 2200)
-            onDownload(latestRelease.version)
           }}
         >
           <Download className="download-button-icon" size={20} />
@@ -337,8 +373,10 @@ function FeaturesSection() {
 
           return (
             <Reveal as="article" className="feature-card" delay={index * 65} key={feature.title}>
-              <div className="feature-icon">{Icon ? <Icon size={25} /> : null}</div>
-              <h3>{feature.title}</h3>
+              <div className="feature-card-header">
+                <div className="feature-icon">{Icon ? <Icon size={22} strokeWidth={1.9} /> : null}</div>
+                <h3>{feature.title}</h3>
+              </div>
               <p>{feature.description}</p>
             </Reveal>
           )
@@ -348,7 +386,7 @@ function FeaturesSection() {
   )
 }
 
-function VersionCard({ release, onDownload, delay = 0 }) {
+function VersionCard({ release, delay = 0 }) {
   const [expanded, setExpanded] = useState(false)
   const visibleSections = release.sections.slice(0, 2)
   const extraSections = release.sections.slice(2)
@@ -383,7 +421,6 @@ function VersionCard({ release, onDownload, delay = 0 }) {
               className="small-download"
               href={release.downloadUrl}
               download
-              onClick={() => onDownload(release.version)}
             >
               <Download size={17} />
               Download
@@ -442,7 +479,7 @@ function VersionCard({ release, onDownload, delay = 0 }) {
   )
 }
 
-function VersionHistory({ releases, onDownload }) {
+function VersionHistory({ releases }) {
   const [query, setQuery] = useState('')
 
   const filteredVersions = useMemo(() => {
@@ -499,7 +536,6 @@ function VersionHistory({ releases, onDownload }) {
           <VersionCard
             key={release.version}
             release={release}
-            onDownload={onDownload}
             delay={Math.min(index * 55, 220)}
           />
         ))}
@@ -523,7 +559,7 @@ function Footer() {
 }
 
 function App() {
-  const [liveVersions, handleDownloadClick] = useLiveVersions()
+  const liveVersions = useLiveVersions()
   const [craigDropId, setCraigDropId] = useState(0)
   const [activeCraigTarget, setActiveCraigTarget] = useState(null)
   const craigTimerRef = useRef(null)
@@ -559,6 +595,7 @@ function App() {
 
   return (
     <div className="site-shell">
+      <AmbientBackground />
       <Header onNavigate={scrollToSection} />
       <main>
         <Hero
@@ -566,11 +603,10 @@ function App() {
           craigDropId={craigDropId}
           latestRelease={liveVersions[0]}
           onCraigSurprise={triggerCraigSurprise}
-          onDownload={handleDownloadClick}
           onNavigate={scrollToSection}
         />
         <FeaturesSection />
-        <VersionHistory releases={liveVersions} onDownload={handleDownloadClick} />
+        <VersionHistory releases={liveVersions} />
       </main>
       {craigDropId > 0 ? (
         <img
