@@ -558,8 +558,30 @@ function Footer() {
   )
 }
 
+const gameIdMaxLength = 200
+
+function getSharedGameId() {
+  const gameId = new URLSearchParams(window.location.search).get('game')?.trim().toLowerCase() || ''
+  return gameId && gameId.length <= gameIdMaxLength ? gameId : null
+}
+
 function App() {
   const liveVersions = useLiveVersions()
+
+  useEffect(() => {
+    const gameId = getSharedGameId()
+
+    if (!gameId) {
+      return undefined
+    }
+
+    const openBreezeTimer = window.setTimeout(() => {
+      window.location.replace(`Breeze-Client://game/${encodeURIComponent(gameId)}`)
+    }, 0)
+
+    return () => window.clearTimeout(openBreezeTimer)
+  }, [])
+
   const [craigDropId, setCraigDropId] = useState(0)
   const [activeCraigTarget, setActiveCraigTarget] = useState(null)
   const craigTimerRef = useRef(null)
